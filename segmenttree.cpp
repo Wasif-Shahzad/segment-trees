@@ -10,7 +10,7 @@ struct SegTree{
 		int n = a.size();
 		t.resize(2*N, 0);
 		for(int i = 0; i < n; i++){
-			t[n+i+1] = a[i];
+			t[n+i] = a[i];
 		}
 		for(int i = n - 1; i > 0; i--) t[i] = t[i<<1] + t[i<<1|1];
 		// equivalent to t[i] = t[2*i] + t[2*i+1]
@@ -22,6 +22,9 @@ struct SegTree{
 		// we will have to build it from the back starting from pos += n
 		for(t[pos += n] = value; pos > 1; pos >>= 1) t[pos>>1] = t[pos] + t[pos^1]; 
 	}
+
+	//query function takes [l, r) such that l is inclusive and r is exclusive 
+	//so for inputs, do l-- only
 
 	int query(int l, int r, int n){
 		// in case you can't understand, just draw a segment tree and simulate the query operation, it will become clear.
