@@ -8,7 +8,7 @@ struct SegTree{
 	vector<int> t;;
 	void build(vector<int>& a){
 		int n = a.size();
-		t.resize(2*N, 0);
+		t.resize(2*n, 0);
 		for(int i = 0; i < n; i++){
 			t[n+i] = a[i];
 		}
