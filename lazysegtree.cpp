@@ -16,7 +16,7 @@ struct segtree{
         size = 1;
         while(size < n) size *= 2;
         tree.resize(2 * size, oo);
-        lazy.resize(2 * size, oo);
+        lazy.resize(2 * size, NO_OPERATIONS);
     }
 
     void merge(int parent, int c1, int c2){
