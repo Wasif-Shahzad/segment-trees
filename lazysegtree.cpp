@@ -8,7 +8,7 @@ NO_OPERATIONS = some neutral value for the update operation
 we have to only merge and operate as per our requirements
 */
 struct segtree{
-    const int NO_OPERATIONS = 0, oo = (1ll << 62) - 1;
+    const int NO_OPERATIONS = LLONG_MAX, oo = LLONG_MAX;
     int size;
     vector<int> tree, lazy;
 
@@ -16,7 +16,7 @@ struct segtree{
         size = 1;
         while(size < n) size *= 2;
         tree.resize(2 * size, oo);
-        lazy.resize(2 * size, 0);
+        lazy.resize(2 * size, oo);
     }
 
     void merge(int parent, int c1, int c2){
@@ -70,29 +70,33 @@ struct segtree{
         return query(l, r, 0, 0, size);
     }
 
-    int operate(int a, int b){
+    int operate(int a, int b, int len){
         if(b == NO_OPERATIONS) return a;
-        return a + b;
+        return b;
     }
 
-    void apply(int parent, int child){
-        tree[child] = operate(tree[child], lazy[parent]);
-        lazy[child] = operate(lazy[child], lazy[parent]);
+    void apply(int parent, int child, int l, int r){
+        tree[child] = operate(tree[child], lazy[parent], r - l);
+        lazy[child] = operate(lazy[child], lazy[parent], 1);
     }
 
-    void push(int x, int lx, int rx){
-        if(rx - lx == 1) return;
-        apply(x, 2 * x + 1);
-        apply(x, 2 * x + 2);
-        lazy[x] = NO_OPERATIONS;
+    void push(int x, int lx, int rx) {
+        if (lazy[x] != NO_OPERATIONS) {
+            if (rx - lx > 1) {
+                int m = (lx + rx) / 2;
+                apply(x, 2 * x + 1, lx, m);
+                apply(x, 2 * x + 2, m, rx);
+            }
+            lazy[x] = NO_OPERATIONS;
+        }
     }
 
     void update(int l, int r, int v, int x, int lx, int rx){
         push(x, lx, rx);
         if(lx >= r || rx <= l) return;
         if(lx >= l && rx <= r) {
-            tree[x] = operate(tree[x], v);
-            lazy[x] = operate(lazy[x], v);
+            tree[x] = operate(tree[x], v, rx - lx);
+            lazy[x] = operate(lazy[x], v, 1);
             return;
         }
         int m = (lx + rx) / 2;
