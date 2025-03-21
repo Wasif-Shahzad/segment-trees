@@ -1,8 +1,3 @@
-#include <bits/stdc++.h>
-
-using namespace std;
-#define int int64_t
-
 /*
 initialization goes like
 segtree<int, decltype(merge function), decltype(operation of lazy prop)>
